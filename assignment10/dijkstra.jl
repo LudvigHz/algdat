@@ -1,7 +1,9 @@
 using DataStructures: PriorityQueue, enqueue!, dequeue!
 
-function general_dijstra(G, w, s, reverse=false)
+function general_dijkstra!(G, w, s, reverse=false)
   initialize!(G, s)
+
+  s = Set()
 
   if reverse
     queue = PriorityQueue(Base.Order.Reverse)
@@ -14,7 +16,8 @@ function general_dijstra(G, w, s, reverse=false)
 
   while !isempty(queue)
     current = dequeue!(queue)
-    for v in G.Adj[current]
+    union!(s, [current])
+    for v in setdiff(G.Adj[current], s)
       update!(current, v, w)
     end
   end
